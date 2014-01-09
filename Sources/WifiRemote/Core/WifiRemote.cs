@@ -333,8 +333,11 @@ namespace WifiRemote
             g_Player.PlayBackEnded += new g_Player.EndedHandler(g_Player_PlayBackEnded);
             g_Player.PlayBackStopped += new g_Player.StoppedHandler(g_Player_PlayBackStopped);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(g_Player_PlayBackChanged);
-            g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
-
+            if (WifiRemote.IsAvailableTVPlugin)
+            {
+                //Listening on the TVChannelChanged event brake at channel change when using Argus 
+                g_Player.TVChannelChanged += new g_Player.TVChannelChangeHandler(g_Player_TVPlayBackChanged);
+            }
             GUIWindowManager.Receivers += new SendMessageHandler(GUIWindowManager_Receivers);
 
             System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
@@ -606,15 +609,16 @@ namespace WifiRemote
         /// </summary>
         void g_Player_TVPlayBackChanged()
         {
-            TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
-            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
+            //TvPlugin.TVHome.Navigator.UpdateCurrentChannel();
+            //TvDatabase.Channel current = TvPlugin.TVHome.Navigator.Channel;
+            TvDatabase.Channel current = TvPlugin.TVHome.Navigator.GetChannel(TvPlugin.TVHome.Navigator.CurrentChannel);
 
-            if (socketServer != null && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
+            if (socketServer != null)// && (LatestChannelId == -1 || LatestChannelId != current.IdChannel))
             {
-                LatestChannelId = current.IdChannel;
+                // LatestChannelId = current.IdChannel;
                 LogMessage("TV Playback changed!", LogType.Debug);
                 socketServer.SendNowPlayingToAllClients();
-            }            
+            }
         }
 
         /// <summary>
