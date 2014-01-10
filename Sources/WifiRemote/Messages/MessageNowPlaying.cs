@@ -189,19 +189,19 @@ namespace WifiRemote
                     }
                     else if (g_Player.IsTV && WifiRemote.IsAvailableTVPlugin)
                     {
-                         if (g_Player.IsTVRecording)
-                         {
-                             NowPlayingRecording recording = MpTvServerHelper.GetNowPlayingRecording();
+                        if (g_Player.IsTVRecording)
+                        {
+                            NowPlayingRecording recording = MpTvServerHelper.GetNowPlayingRecording();
 
-                             if (recording.IsRecording())
-                             {
-                                 return recording;
-                             }
-                         }
-                         else
-                         {
-                             return MpTvServerHelper.GetNowPlayingTv();
-                         }
+                            if (recording.IsRecording())
+                            {
+                                return recording;
+                            }
+                        }
+                        else
+                        {
+                            return MpTvServerHelper.GetNowPlayingTv();
+                        }
                     }
                 }
 
